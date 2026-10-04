@@ -31,66 +31,57 @@ interface TimelineItem {
 const TIMELINE: TimelineItem[] = [
   {
     emoji: "💬",
-    time: "00:00",
-    date: "DD Month YYYY",
+    time: "2:06 PM",
+    date: "12 Aug 2026",
     title: "The First Message",
     description:
-      "Replace this with how your story began. That first message, that first hello - the moment that started everything.",
-    image: null,
+      "This was the moment it all began. The time you reached out to me, the first spark of our story. This was when you introduced yourself as 'rora, danewin =P' then i told you to save me back as your boyfriend as a joke.",
+    image: "/images/first.png",
   },
   {
     emoji: "💘",
-    time: "00:00",
-    date: "DD Month YYYY",
+    time: "6:14 PM",
+    date: "04 Sept 2026",
     title: "The Confession",
     description:
-      "Replace this with your confession story. How did you tell them how you feel? What made it special?",
-    image: null,
+      "Actually i was quite nervous receiving your confession, but i was happy that you confessed to me. I was happy that you liked me, and i was happy that it was you. If we turn back time, i would confess to you first.",
+    image: "/images/ohyulhaum.jpg",
   },
   {
     emoji: "💍",
-    time: "00:00",
-    date: "DD Month YYYY",
-    title: "They Said Yes",
+    time: "12:56 PM",
+    date: "05 Sept 2026",
+    title: "The Start Of Our Journey",
     description:
-      "Replace this with the moment they said yes. That one word that changed everything.",
-    image: null,
+      "Literally the next day after your confession, we started our journey together. Though i was very nervous getting into this space but i really did want to meet you at the same eye level.",
+    image: "/images/anime1.jpg",
   },
   {
     emoji: "💕",
-    time: "00:00",
-    date: "DD Month YYYY",
+    time: "6:54 PM",
+    date: "10 Sept 2026",
     title: "First \"I Love You\"",
     description:
-      "Replace this with your first \"I love you\" moment. The words that made it all real.",
-    image: null,
+      "Well i thinkk this was the first time we said 'I love you' to each other. I remember we did not exchange ILY for a few days because we were trying to get to know each other first but then the ILY's came naturally when both of us knew that we loved each other for who we are and personally i don't say ILY to people i'm not sure of but i knew what i had for you was already real by then.",
+    image: "/images/anime2.jpg",
   },
   {
     emoji: "🦋",
-    time: "00:00",
-    date: "DD Month YYYY",
+    time: "7:00 PM",
+    date: "13 Sept 2026",
     title: "Getting to Know Each Other",
     description:
-      "Replace this with a meaningful conversation or detail you discovered about each other.",
-    image: null,
-  },
-  {
-    emoji: "🤗",
-    time: "00:00",
-    date: "DD Month YYYY",
-    title: "A Sweet Moment",
-    description:
-      "Replace this with a sweet, tender moment you shared - a virtual hug, a kind gesture, or a warm exchange.",
-    image: null,
+      "I have a starred message of this day where the both of us was just sharing about our love for each other grows with time and admitting that there is no such thing as a perfect couple but we were determined to choose each other even when time gets a litttle rough or even when time is stealing us away from each other.",
+    image: "/images/anime3.jpg",
   },
   {
     emoji: "🧸",
-    time: "00:00",
-    date: "DD Month YYYY",
+    time: "00:00 AM",
+    date: "05 Oct 2026",
     title: "Making It Official ♥",
     description:
-      "Replace this with the moment it all became official. When the labels stopped mattering because the love was already real.",
-    image: null,
+      "If you noticed, the date is today. Exactly one month ago, we started exploring this journey together.",
+    image: "/images/anime4.jpg",
   },
 ];
 
@@ -113,7 +104,10 @@ const FLOATING_WORDS = [
 
 export default function Home() {
   const [modalImage, setModalImage] = useState<{ src: string; alt: string } | null>(null);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [musicError, setMusicError] = useState<string | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -122,9 +116,52 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 0.8], [1, 0.95]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
+  async function toggleMusic() {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+        setIsMusicPlaying(true);
+        setMusicError(null);
+      } catch {
+        setMusicError("Music could not be played. Check that /music/song.mp3 exists.");
+      }
+    } else {
+      audio.pause();
+      setIsMusicPlaying(false);
+    }
+  }
+
   return (
     <main className="relative overflow-x-hidden">
       <FloatingHearts />
+      <audio
+        ref={audioRef}
+        src="/music/song.mp3"
+        loop
+        preload="none"
+        onError={() => {
+          setIsMusicPlaying(false);
+          setMusicError("Music could not be loaded. Check that /music/song.mp3 exists.");
+        }}
+      />
+      <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6">
+        <button
+          type="button"
+          onClick={toggleMusic}
+          aria-pressed={isMusicPlaying}
+          className="rounded-full border border-orchid/30 bg-[#0e0b16]/90 px-4 py-2 text-sm text-plum shadow-lg backdrop-blur transition hover:border-orchid/60 hover:bg-orchid/20"
+        >
+          {isMusicPlaying ? "Pause music ♪" : "Play music ♫"}
+        </button>
+        {musicError && (
+          <p role="alert" className="mt-2 max-w-56 rounded-lg bg-[#0e0b16]/90 p-2 text-xs text-white/80">
+            {musicError}
+          </p>
+        )}
+      </div>
 
       {/* ═══════════ HERO ═══════════ */}
       <section
@@ -148,7 +185,7 @@ export default function Home() {
               animate={{ opacity: [0.6, 1, 0.6] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
-              They said yes 💍
+              Our First Monthsary
             </motion.p>
           </Reveal>
 
@@ -159,21 +196,20 @@ export default function Home() {
                 animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
               >
-                Your Name
+                Laelia Danewin
               </motion.span>
             </h1>
           </Reveal>
 
           <Reveal variant="blur" delay={0.5}>
             <p className="mx-auto mt-4 max-w-sm font-signature text-xl text-plum/70 sm:mt-6 sm:max-w-lg sm:text-2xl md:text-3xl">
-              my forever, my everything
+              the jukyung to my suho
             </p>
           </Reveal>
 
           <Reveal variant="fadeUp" delay={0.7}>
             <p className="mx-auto mt-4 max-w-xs text-xs leading-relaxed text-white/50 sm:mt-6 sm:max-w-md sm:text-sm">
-              Replace this with the date and time your story began. This little corner
-              of the internet is yours to fill.
+              Just a walk down memory lane, to celebrate the day we met and the journey we&apos;ve started together. A little corner of the internet, just for us.
             </p>
           </Reveal>
 
@@ -220,7 +256,7 @@ export default function Home() {
               </motion.span>
             </h2>
             <p className="mt-3 text-center text-xs text-white/40 sm:mt-4 sm:text-sm">
-              One day. Many moments. A lifetime beginning.
+              Two crackheads. Friends to Lovers. A cute story.
             </p>
           </Reveal>
 
@@ -399,14 +435,14 @@ export default function Home() {
                   paddingBottom: 4,
                 }}
               >
-                You & Me
+                Rafe & Danewin
               </motion.span>
             </h2>
           </Reveal>
 
           <Reveal variant="fadeUp" delay={0.15}>
             <p className="mt-4 font-signature text-lg text-white/30 sm:mt-5 sm:text-xl">
-              this is just the beginning
+              to the most beautiful girl in the world
             </p>
           </Reveal>
 
@@ -507,36 +543,31 @@ export default function Home() {
 
             <Reveal variant="fadeUp">
               <p className="font-signature text-2xl text-plum sm:text-3xl md:text-4xl">
-                Dear [Name],
+                Dear Danewin,
               </p>
             </Reveal>
             <Reveal variant="fadeUp" delay={0.2}>
               <div className="mt-4 space-y-3 text-xs leading-relaxed text-white/60 sm:mt-6 sm:space-y-4 sm:text-sm">
                 <p>
-                  Replace this paragraph with your own words. Tell them how you
-                  feel, what made you notice them, why they matter to you.
+                  I'm writing this letter to you because I want to be honest about my feelings. I want to tell you how much you mean to me, and how much I care about you. I have known you long enough to notice the hard working person you are that drew me to you. You are so much more than a person with a kind heart to me, you are honestly beyond exquisite. It would be such a shame to lose somebody as compassionate as you who is always trying her best to make the people around her happy. I want to be that person for you, and I want to be the one who makes you feel loved and appreciated every single day.
                 </p>
                 <p>
-                  Write something honest. Something that sounds like you. You don&apos;t
-                  need perfect words - just real ones.
+                  You are a scent of comfort with a warmth of an angel. A beauty that speaks with her soul. A woman who is so much more than what meets the eye. Softer than the petals of a flower, yet stronger than the roots that holds it in place. A day without the sun is a day without you. A life without you is a life without love. Come lean on me, and I will hold you gently.
                 </p>
                 <p>
-                  Talk about your hopes, your dreams for the two of you. What do
-                  you want to build together? What kind of future do you picture?
+                  There is nothing more that I want than to see you thrive as a person that you want to become. I want to create a relationship where we can both help each other out physically and mentally. I want you to be free and explore the world knowing that you have somebody who supports your dreams and visions. While I am also building myself to be a better person than yesterday and be able to hold onto you when I need to. I want a future where the both of us can sit back and realize that what we have created together is more than just a romance relationship but a partnership that is built on trust, honesty, and love. You are an extraordinary woman, and I know that you are capable of so many things. I am here to support that dream.
                 </p>
                 <p>
-                  And finally, tell them what you need from them. Honesty.
-                  Patience. A chance. Whatever feels true.
+                  And finally, I love you. I love you for who you are, and I love you for who you are becoming. I love you for the way you make me feel, and I love you for the way you make me want to be a better person. I love you for the way you make me laugh, and I love you for the way you make me cry. I love you for the way you make me feel alive, and I love you for the way you make me feel whole. I love you for the way you make me feel loved, and I love you for the way you make me feel like I am enough. I love you for the way you make me feel like I am home.
                 </p>
                 <p className="text-white/80">
-                  Sign it with something personal. A time, a date, a feeling. Make
-                  it yours.
+                  Rafe || 05 Oct 2026
                 </p>
               </div>
             </Reveal>
             <Reveal variant="fadeUp" delay={0.4}>
               <p className="mt-6 font-signature text-xl text-saffron/60 sm:mt-8 sm:text-2xl">
-                Forever yours, at [time] ♥
+                Forever yours && Forever Mine ♥
               </p>
             </Reveal>
           </motion.div>
@@ -565,7 +596,7 @@ export default function Home() {
             your little corner of the internet
           </p>
           <p className="mt-2 text-[10px] text-white/15 sm:text-xs">
-            [Date] ♥ the night everything began
+            [05 Oct 2026] ♥ the night everything began
           </p>
         </Reveal>
       </footer>

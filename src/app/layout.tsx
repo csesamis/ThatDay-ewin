@@ -5,18 +5,18 @@ import "./globals.css";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
-  title: "Our Love Story",
+  title: "Rafe & Danewin <3",
   description: "A beautiful timeline of how our love story began.",
   metadataBase: new URL(siteUrl),
   openGraph: {
-    title: "Our Love Story",
+    title: "Rafe & Danewin <3",
     description: "A beautiful timeline of how our love story began.",
-    siteName: "Our Love Story",
+    siteName: "Rafe & Danewin <3",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Our Love Story",
+    title: "Rafe & Danewin <3",
     description: "A beautiful timeline of how our love story began.",
   },
 };
