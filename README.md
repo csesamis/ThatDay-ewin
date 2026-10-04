@@ -1,4 +1,4 @@
-# ThatDay - A Romantic Timeline Template
+git remote -v# ThatDay - A Romantic Timeline Template
 
 > To be honest , she broke with me i guess it can help you , i really loved her. No worries enjoy this feel free to modify or to contribute TBH i don't want to continue this :( but maybe someone can be happy cuz of me ,  the latest commits is done by Github Copilot including this Readme. this is built in just 2hr there can be bugs sorry for that.
 
